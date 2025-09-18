@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assistindo — HAnime Legendado PRO</title>
+  <style>
+    body {
+      background:#000;
+      margin:0;
+      padding:0;
+      color:#fff;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .player-container {
+      max-width:1200px;
+      margin:20px auto;
+      padding:0 20px;
+    }
+    .video-title {
+      font-size:24px;
+      margin:20px 0;
+      text-align:center;
+    }
+    iframe {
+      width:100%;
+      height:70vh;
+      border:none;
+      background:#000;
+    }
+    .controls {
+      text-align:center;
+      margin-top:20px;
+    }
+    .btn {
+      background:#ff2d55;
+      color:white;
+      border:none;
+      padding:10px 20px;
+      margin:0 5px;
+      border-radius:5px;
+      cursor:pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="player-container">
+    <div class="video-title" id="video-title">Carregando...</div>
+    <iframe id="video-frame" allowfullscreen></iframe>
+    <div class="controls">
+      <button class="btn" onclick="history.back()">← Voltar</button>
+      <button class="btn" onclick="loadNext()">Próximo →</button>
+    </div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const videoId = urlParams.get('id');
+
+    let currentVideoIndex = 0;
+    let allVideos = [];
+
+    async function loadVideo() {
+      const response = await fetch('data.json');
+      allVideos = await response.json();
+      const video = allVideos.find(v => v.id == videoId);
+      currentVideoIndex = allVideos.indexOf(video);
+
+      if (video) {
+        document.getElementById('video-title').innerText = video.title;
+        document.getElementById('video-frame').src = video.embed_url;
+        document.title = video.title + " — HAnime Legendado PRO";
+      } else {
+        document.getElementById('video-title').innerText = "Vídeo não encontrado.";
+      }
+    }
+
+    function loadNext() {
+      if (currentVideoIndex < allVideos.length - 1) {
+        const nextVideo = allVideos[currentVideoIndex + 1];
+        window.location.href = `player.html?id=${nextVideo.id}`;
+      } else {
+        alert("Você chegou ao último vídeo!");
+      }
+    }
+
+    loadVideo();
+  </script>
+</body>
+</html>
