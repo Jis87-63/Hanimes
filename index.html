@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FllopsHanimes — Uncensored Hentai & Anime</title>
+  <meta name="google-adsense-account" content="ca-pub-2569329537599023">
+  <meta name="google-site-verification" content="lrfXnDIgUTuzmP2fNC4M6sUOpiewQPZbv2JIgM1xLlk">
+  <style>
+    /* RESET & GLOBAL */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background:#0f0f0f;
+      color:#eee;
+      font-family: 'Segoe UI', sans-serif;
+      padding:0;
+      margin:0;
+    }
+    a { text-decoration:none; color:#ff2d55; }
+    .container { max-width:1400px; margin:0 auto; padding:20px; }
+
+    /* HEADER */
+    header {
+      background:#1a1a1a;
+      padding:15px 20px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      border-bottom:2px solid #ff2d55;
+    }
+    .logo {
+      font-size:24px;
+      font-weight:bold;
+      color:#ff2d55;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .logo-dragon {
+      width:24px;
+      height:24px;
+      background:#ff2d55;
+      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+      display:inline-block;
+    }
+
+    /* GRID */
+    .section-title {
+      font-size:22px;
+      margin:30px 0 20px;
+      color:#ff2d55;
+      border-left:4px solid #ff2d55;
+      padding-left:10px;
+    }
+    .video-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
+      gap:20px;
+    }
+    .video-item {
+      background:#1a1a1a;
+      border-radius:10px;
+      overflow:hidden;
+      transition:0.3s;
+      border:1px solid #333;
+    }
+    .video-item:hover {
+      transform:translateY(-5px);
+      border-color:#ff2d55;
+    }
+    .video-thumb {
+      width:100%;
+      height:160px;
+      object-fit:cover;
+      display:block;
+    }
+    .video-title {
+      padding:10px;
+      font-size:14px;
+      line-height:1.4;
+      display:-webkit-box;
+      -webkit-line-clamp:2;
+      -webkit-box-orient:vertical;
+      overflow:hidden;
+    }
+
+    /* ADS */
+    .ads-container {
+      margin:40px 0;
+      text-align:center;
+    }
+    @media (max-width:768px) {
+      .video-grid { grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); }
+      .video-thumb { height:120px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <div class="logo-dragon"></div>
+      FllopsHanimes
+    </div>
+  </header>
+
+  <div class="container">
+    <h2 class="section-title">🔥 Lançamentos</h2>
+    <div class="video-grid" id="launch-grid"></div>
+
+    <div class="ads-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-2569329537599023"
+           data-ad-slot="728x90"></ins>
+    </div>
+
+    <h2 class="section-title">📺 Episódios</h2>
+    <div class="video-grid" id="episode-grid"></div>
+
+    <h2 class="section-title">🎬 Filmes/OVAs</h2>
+    <div class="video-grid" id="movie-grid"></div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script>
+    // Firebase Config (embutido)
+    const firebaseConfig = {
+      apiKey: "AIzaSyDj1qqCBztEpF31n9UU3DFKwiymc2Bd-iM",
+      authDomain: "bot-ia-20e75.firebaseapp.com",
+      databaseURL: "https://bot-ia-20e75-default-rtdb.firebaseio.com",
+      projectId: "bot-ia-20e75",
+      storageBucket: "bot-ia-20e75.appspot.com",
+      messagingSenderId: "601684351023",
+      appId: "1:601684351023:android:e94d0ab92f512c4cb80eda"
+    };
+
+    // Inicializa Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Carrega vídeos por categoria
+    function loadVideos(category, containerId) {
+      db.ref(`videos/${category}`).once('value', (snapshot) => {
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+        snapshot.forEach((child) => {
+          const video = child.val();
+          const item = document.createElement('div');
+          item.className = 'video-item';
+          item.innerHTML = `
+            <a href="player.html?id=${video.id}&category=${category}&key=${child.key}">
+              <img class="video-thumb" src="${video.thumbnail || 'https://i.imgur.com/default-thumb.jpg'}" alt="${video.title}">
+              <div class="video-title">${video.title}</div>
+            </a>
+          `;
+          container.appendChild(item);
+        });
+      });
+    }
+
+    // Carrega todas as seções
+    loadVideos('launch', 'launch-grid');
+    loadVideos('episodes', 'episode-grid');
+    loadVideos('movies', 'movie-grid');
+  </script>
+
+  <!-- AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2569329537599023" crossorigin="anonymous"></script>
+  <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</body>
+</html>
