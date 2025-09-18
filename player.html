@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assistindo — FllopsHanimes</title>
+  <style>
+    body {
+      background:#000;
+      margin:0;
+      padding:0;
+      color:#fff;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .player-container {
+      max-width:1200px;
+      margin:0 auto;
+      padding:20px 10px;
+    }
+    .video-title {
+      font-size:24px;
+      margin:20px 0;
+      text-align:center;
+      color:#ff2d55;
+    }
+    .player-wrapper {
+      position:relative;
+      padding-top:56.25%; /* 16:9 Aspect Ratio */
+      background:#000;
+      border-radius:10px;
+      overflow:hidden;
+    }
+    iframe {
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      border:none;
+    }
+    .controls {
+      display:flex;
+      justify-content:space-between;
+      margin:20px 0;
+      padding:0 20px;
+    }
+    .btn {
+      background:#ff2d55;
+      color:white;
+      border:none;
+      padding:10px 20px;
+      border-radius:5px;
+      cursor:pointer;
+      font-weight:bold;
+      transition:0.3s;
+    }
+    .btn:hover { background:#ff5577; }
+    .volume-slider {
+      width:100%;
+      max-width:200px;
+    }
+    @media (max-width:768px) {
+      .controls { flex-direction:column; gap:10px; }
+      .volume-slider { max-width:100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="player-container">
+    <div class="video-title" id="video-title">Carregando...</div>
+    <div class="player-wrapper">
+      <iframe id="video-frame" allowfullscreen></iframe>
+    </div>
+
+    <div class="controls">
+      <button class="btn" onclick="history.back()">← Voltar</button>
+      <input type="range" class="volume-slider" id="volume-control" min="0" max="100" value="80" oninput="setVolume(this.value)">
+      <button class="btn" id="next-btn">Próximo Episódio →</button>
+    </div>
+  </div>
+
+  <script>
+    // Pega parâmetros da URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const videoId = urlParams.get('id');
+    const category = urlParams.get('category');
+    const videoKey = urlParams.get('key');
+
+    // Firebase Config (embutido)
+    const firebaseConfig = {
+      apiKey: "AIzaSyDj1qqCBztEpF31n9UU3DFKwiymc2Bd-iM",
+      authDomain: "bot-ia-20e75.firebaseapp.com",
+      databaseURL: "https://bot-ia-20e75-default-rtdb.firebaseio.com",
+      projectId: "bot-ia-20e75",
+      storageBucket: "bot-ia-20e75.appspot.com",
+      messagingSenderId: "601684351023",
+      appId: "1:601684351023:android:e94d0ab92f512c4cb80eda"
+    };
+
+    // Inicializa Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Carrega vídeo
+    function loadVideo() {
+      db.ref(`videos/${category}/${videoKey}`).once('value', (snapshot) => {
+        const video = snapshot.val();
+        if (video) {
+          document.getElementById('video-title').innerText = video.title;
+          document.getElementById('video-frame').src = video.embed_url;
+          document.title = video.title + " — FllopsHanimes";
+
+          // Configura próximo episódio (simulação)
+          document.getElementById('next-btn').onclick = () => {
+            alert("Próximo episódio em desenvolvimento!");
+          };
+        }
+      });
+    }
+
+    // Controla volume (simulação — iframe externo não permite controle real)
+    function setVolume(value) {
+      console.log("Volume ajustado para: " + value + "%");
+      // Em players próprios, isso controlaria o volume. Em iframes externos, é limitado.
+    }
+
+    // Inicia
+    loadVideo();
+  </script>
+</body>
+</html>
